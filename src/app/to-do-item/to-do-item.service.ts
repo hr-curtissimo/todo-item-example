@@ -24,7 +24,7 @@ export class ToDoItemService {
 
   add(text: string, due?: Date): void {
     const item = new ToDoItem(text, false, due);
-    this._list = [ ...this._list, item ];
+    this._list = [ item, ...this._list ];
     window.localStorage.setItem('items', JSON.stringify(this._list));
     this.getAll();
   }
