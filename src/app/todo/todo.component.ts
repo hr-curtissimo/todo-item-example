@@ -20,20 +20,17 @@ export class TodoComponent implements OnInit {
 
   ngOnInit() {
     this._itemData
-      .getAll()
-      .subscribe(items => this.items = items);
+      .itemsChanged$
+      .subscribe(items => {
+        this.items = items;
+        this.sending = false;
+        this.text = '';
+      });
   }
 
   createNewItem() {
     this.sending = true;
-    this._itemData
-      .add(this.text)
-      .mergeMap(() => this._itemData.getAll())
-      .subscribe(
-        items => (this.items = items) && (this.text = ''),
-        () => this.sending = false,
-        () => this.sending = false
-      );
+    this._itemData.add(this.text);
   }
 
   markComplete(item: ToDoItem) {
@@ -41,8 +38,8 @@ export class TodoComponent implements OnInit {
     this._itemData
       .save(item)
       .subscribe(
-        () => {},
-        () => item.completed = false
+        () => this.sending = false,
+        () => item.completed = false || (this.sending = false),
       );
   }
 }

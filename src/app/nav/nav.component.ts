@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToDoItemService } from '../to-do-item/to-do-item.service';
 
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/do';
 
 @Component({
   selector: 'app-nav',
@@ -18,7 +19,8 @@ export class NavComponent implements OnInit {
 
   ngOnInit() {
     this._itemData
-      .getAll()
+      .itemsChanged$
+      .do(x => x.push({ text: '?', completed: true }))
       .map(x => x.length)
       .subscribe(count => this.numberOfTodos = count);
   }

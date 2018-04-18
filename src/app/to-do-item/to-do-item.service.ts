@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ToDoItem } from '../models/todo';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
@@ -9,27 +10,32 @@ import 'rxjs/add/operator/do';
 @Injectable()
 export class ToDoItemService {
 
-  private list: ToDoItem[];
+  private _list: ToDoItem[];
+  private _items$: BehaviorSubject<ToDoItem[]>;
 
   constructor() {
-    this.list = JSON.parse(window.localStorage.getItem('items') || '[]');
+    this._list = JSON.parse(window.localStorage.getItem('items') || '[]');
+    this._items$ = new BehaviorSubject<ToDoItem[]>(this._list);
   }
 
-  add(text: string, due?: Date): Observable<ToDoItem> {
-    return Observable.of(new ToDoItem(text, false, due))
-      .delay(500)
-      .do(item => this.list.push(item))
-      .do(item => window.localStorage.setItem('items', JSON.stringify(this.list)));
+  get itemsChanged$(): Observable<ToDoItem[]> {
+    return this._items$.map(items => [...items]);
   }
 
-  getAll(): Observable<ToDoItem[]> {
-    return Observable.of(this.list)
-      .delay(500);
+  add(text: string, due?: Date): void {
+    const item = new ToDoItem(text, false, due);
+    this._list = [ ...this._list, item ];
+    window.localStorage.setItem('items', JSON.stringify(this._list));
+    this.getAll();
+  }
+
+  getAll(): void {
+    setTimeout(() => this._items$.next(this._list), 500);
   }
 
   save(item: ToDoItem): Observable<ToDoItem> {
     return Observable.of(item)
-      .do(item => window.localStorage.setItem('items', JSON.stringify(this.list)))
+      .do(item => window.localStorage.setItem('items', JSON.stringify(this._list)))
       .delay(600);
   }
 
