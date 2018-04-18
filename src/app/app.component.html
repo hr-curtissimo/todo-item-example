@@ -1,14 +1,2 @@
-<div>
-  <form (submit)="createNewItem()">
-    <input [disabled]="sending" name="text" type="text" [(ngModel)]="text">
-    <button [disabled]="sending">Create</button>
-  </form>
-</div>
-
-<ul>
-  <li (click)="markComplete(item)"
-      *ngFor="let item of items"
-      [ngClass]="{ completed: item.completed }">
-    {{ item.text }}
-  </li>
-</ul>
+<app-nav></app-nav>
+<router-outlet></router-outlet>

@@ -17,9 +17,9 @@ export class ToDoItemService {
 
   add(text: string, due?: Date): Observable<ToDoItem> {
     return Observable.of(new ToDoItem(text, false, due))
+      .delay(500)
       .do(item => this.list.push(item))
-      .do(item => window.localStorage.setItem('items', JSON.stringify(this.list)))
-      .delay(500);
+      .do(item => window.localStorage.setItem('items', JSON.stringify(this.list)));
   }
 
   getAll(): Observable<ToDoItem[]> {
