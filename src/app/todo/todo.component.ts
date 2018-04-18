@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ToDoItem } from '../models/todo';
 import { ToDoItemService } from '../to-do-item/to-do-item.service';
+import { State } from '../store/state';
+import { Store } from '@ngrx/store';
+import { AddTodo } from '../store/actions/todo-actions';
 
 @Component({
   selector: 'app-todo',
@@ -13,14 +16,14 @@ export class TodoComponent implements OnInit {
   public sending: boolean;
 
   constructor(
-    private _itemData: ToDoItemService
+    private _store: Store<State>
   ) {
     this.items = [];
   }
 
   ngOnInit() {
-    this._itemData
-      .itemsChanged$
+    this._store
+      .select(state => state.todos)
       .subscribe(items => {
         this.items = items;
         this.sending = false;
@@ -30,16 +33,17 @@ export class TodoComponent implements OnInit {
 
   createNewItem() {
     this.sending = true;
-    this._itemData.add(this.text);
+    this._store.dispatch(new AddTodo(this.text));
+    // this._itemData.add(this.text);
   }
 
   markComplete(item: ToDoItem) {
-    item.completed = true;
-    this._itemData
-      .save(item)
-      .subscribe(
-        () => this.sending = false,
-        () => item.completed = false || (this.sending = false),
-      );
+    // item.completed = true;
+    // this._itemData
+    //   .save(item)
+    //   .subscribe(
+    //     () => this.sending = false,
+    //     () => item.completed = false || (this.sending = false),
+    //   );
   }
 }

@@ -8,6 +8,13 @@ import { ToDoItemService } from './to-do-item/to-do-item.service';
 import { NavComponent } from './nav/nav.component';
 import { TodoComponent } from './todo/todo.component';
 import { ElsewhereComponent } from './elsewhere/elsewhere.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
+import { initialState } from './store/state';
+import { reducers } from './store/reducers';
+import { ToDoEffects } from './store/effects/todo-effects';
 
 const routes: Route[] = [
   { redirectTo: '/todos', path: '', pathMatch: 'full' },
@@ -26,6 +33,9 @@ const routes: Route[] = [
     BrowserModule,
     FormsModule,
     RouterModule.forRoot(routes),
+    StoreModule.forRoot(reducers, { initialState }),
+    EffectsModule.forRoot([ToDoEffects]),
+    StoreDevtoolsModule.instrument({ maxAge: 25 })
   ],
   providers: [
     ToDoItemService
