@@ -1,6 +1,6 @@
 import { Effect, Actions } from '@ngrx/effects';
 import { State } from '../state';
-import { ADD_TODO, AddTodo, AddTodoCompleted } from '../actions/todo-actions';
+import { ADD_TODO, AddTodo, AddTodoCompleted, LOAD_TODOS, LoadTodos, LoadTodosCompleted } from '../actions/todo-actions';
 import { ToDoItem } from '../../models/todo';
 import { Injectable } from '@angular/core';
 
@@ -20,5 +20,12 @@ export class ToDoEffects {
       localStorage.setItem('items', JSON.stringify(items));
 
       return new AddTodoCompleted(item);
+    });
+
+  @Effect() loadTodos$ = this._actions
+    .ofType(LOAD_TODOS)
+    .map((action: LoadTodos) => {
+      const items = JSON.parse(localStorage.getItem('items') || '[]');
+      return new LoadTodosCompleted(items);
     });
 }
