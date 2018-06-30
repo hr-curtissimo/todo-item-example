@@ -3,6 +3,7 @@ import { ToDoItem } from '../../models/todo';
 
 export const ADD_TODO = 'Add todo item';
 export const ADD_TODO_COMPLETED = 'Add todo item completed';
+export const COMPLETE_TODO = 'Complete todo';
 export const LOAD_TODOS = 'Load todos';
 export const LOAD_TODOS_COMPLETED = 'Load todos completed';
 
@@ -25,9 +26,15 @@ export class LoadTodosCompleted implements Action {
   constructor(public payload: ToDoItem[]) {}
 }
 
+export class CompleteTodo implements Action {
+  readonly type = COMPLETE_TODO;
+  constructor(public payload: ToDoItem) {}
+}
+
 export type Actions
   = AddTodo
   | AddTodoCompleted
+  | CompleteTodo
   | LoadTodos
   | LoadTodosCompleted
   ;

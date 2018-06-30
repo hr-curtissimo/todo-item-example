@@ -2,3 +2,9 @@
   display: block;
   padding: 1em;
 }
+
+.completed {
+  color: #CCC;
+  font-style: italic;
+  text-decoration: line-through;
+}

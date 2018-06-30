@@ -3,7 +3,7 @@ import { ToDoItem } from '../models/todo';
 import { ToDoItemService } from '../to-do-item/to-do-item.service';
 import { State } from '../store/state';
 import { Store } from '@ngrx/store';
-import { AddTodo } from '../store/actions/todo-actions';
+import { AddTodo, CompleteTodo } from '../store/actions/todo-actions';
 
 @Component({
   selector: 'app-todo',
@@ -34,16 +34,9 @@ export class TodoComponent implements OnInit {
   createNewItem() {
     this.sending = true;
     this._store.dispatch(new AddTodo(this.text));
-    // this._itemData.add(this.text);
   }
 
   markComplete(item: ToDoItem) {
-    // item.completed = true;
-    // this._itemData
-    //   .save(item)
-    //   .subscribe(
-    //     () => this.sending = false,
-    //     () => item.completed = false || (this.sending = false),
-    //   );
+    this._store.dispatch(new CompleteTodo(item));
   }
 }

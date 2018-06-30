@@ -3,6 +3,8 @@ import { ToDoItemService } from '../to-do-item/to-do-item.service';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
+import { State } from '../store/state';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-nav',
@@ -14,13 +16,12 @@ export class NavComponent implements OnInit {
   public numberOfTodos: number;
 
   constructor(
-    private _itemData: ToDoItemService
+    private _store: Store<State>
   ) {}
 
   ngOnInit() {
-    this._itemData
-      .itemsChanged$
-      .do(x => x.push({ text: '?', completed: true }))
+    this._store
+      .select(state => state.todos)
       .map(x => x.length)
       .subscribe(count => this.numberOfTodos = count);
   }
